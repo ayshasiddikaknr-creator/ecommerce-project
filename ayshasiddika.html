@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AYSHA COLLECTIONS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans:['Inter','sans-serif'], serif:['Playfair Display','serif'], classic:['Cormorant Garamond','serif'] },
+                    colors: { champagne:'#d4af37' }
+                }
+            }
+        }
+    </script>
+    <style>
+        *{ -webkit-tap-highlight-color:transparent; }
+        body{ background:#0a0a0a; }
+        @keyframes float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+        @keyframes fadeUp{ from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes slideR{ from{transform:translateX(100%)} to{transform:translateX(0)} }
+        @keyframes slideROut{ from{transform:translateX(0)} to{transform:translateX(100%)} }
+        @keyframes marquee{ 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        @keyframes shimmer{ 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+        .anim-float{animation:float 6s ease-in-out infinite}
+        .anim-up{animation:fadeUp .7s ease-out forwards}
+        .anim-d1{animation:fadeUp .7s ease-out .1s forwards;opacity:0}
+        .anim-d2{animation:fadeUp .7s ease-out .2s forwards;opacity:0}
+        .anim-d3{animation:fadeUp .7s ease-out .3s forwards;opacity:0}
+        .slide-in{animation:slideR .3s ease-out forwards}
+        .slide-out{animation:slideROut .25s ease-in forwards}
+        .anim-marquee{animation:marquee 35s linear infinite}
+        .toast-in{animation:fadeUp .25s ease-out forwards}
+        .toast-out{animation:slideROut .2s ease-in forwards}
+        .divider-gold{display:flex;align-items:center;gap:12px}
+        .divider-gold::before,.divider-gold::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.25),transparent)}
+        .scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;scrollbar-width:none}
+        .scroll-x::-webkit-scrollbar{display:none}
+        .scroll-x>*{scroll-snap-align:start}
+        .clamp1{overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+        .mc{position:relative;background:#111;border:1px solid rgba(255,255,255,.04);border-radius:12px;overflow:hidden;transition:border-color .3s}
+        .mc:hover{border-color:rgba(255,255,255,.08)}
+        .mc-img{transition:transform .4s ease;width:100%;height:100%;object-fit:cover}
+        .mc:hover .mc-img{transform:scale(1.07)}
+        .mc-act{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;backdrop-filter:blur(2px)}
+        .mc:hover .mc-act{opacity:1}
+        @media(max-width:767px){.mc:active .mc-act{opacity:1}}
+        .az-link{display:inline-flex;align-items:center;gap:2px;font-size:7px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;line-height:1.3;transition:color .2s}
+        .az-link.amazon{color:#293548}
+        .az-link.amazon:hover{color:#d4af37}
+        .az-link.flipkart{color:#2874f0}
+        .az-link.flipkart:hover{color:#5ba0f5}
+        .az-link.nykaa{color:#e84393}
+        .az-link.nykaa:hover{color:#fd79a8}
+        .az-link.myntra{color:#ff3f6c}
+        .az-link.myntra:hover{color:#ff6b8a}
+        .az-link.meesho{color:#570a57}
+        .az-link.meesho:hover{color:#d4af37}
+        .az-link.custom{color:#374151}
+        .az-link.custom:hover{color:#d4af37}
+        ::-webkit-scrollbar{width:2px}
+        ::-webkit-scrollbar-track{background:#0a0a0a}
+        ::-webkit-scrollbar-thumb{background:#1a1a1a}
+        #sr{scrollbar-width:none}
+        #sr::-webkit-scrollbar{display:none}
+        .hero-line{width:60px;height:1px;background:linear-gradient(90deg,transparent,#d4af37,transparent);background-size:200% 100%;animation:shimmer 3s linear infinite}
+        .view-btn{font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:#374151;transition:color .2s;cursor:pointer;background:none;border:none;padding:0;white-space:nowrap}
+        .view-btn:hover{color:#d4af37}
+        .view-btn.expanded{color:#d4af37}
+    </style>
+</head>
+<body class="font-sans text-white antialiased overflow-x-hidden">
+
+<div id="tb" class="fixed top-14 left-3 right-3 sm:left-auto sm:right-4 sm:w-64 z-[100] flex flex-col gap-1.5"></div>
+
+<!-- Nav -->
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-400">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-10">
+        <div class="flex items-center justify-between h-11 sm:h-[68px]">
+            <button onclick="mob()" class="sm:hidden p-1.5 text-slate-400"><i data-lucide="menu" class="w-[17px] h-[17px]"></i></button>
+            <a href="#" class="font-classic text-[14px] sm:text-2xl lg:text-[28px] font-light tracking-[.1em] text-white">AYSHA<span class="text-champagne">COLLECTIONS</span></a>
+            <div class="hidden sm:flex items-center gap-6 lg:gap-8">
+                <a href="#feat" class="text-[10px] font-medium tracking-[.18em] uppercase text-slate-500 hover:text-white transition-colors">Shop</a>
+                <a href="#new" class="text-[10px] font-medium tracking-[.18em] uppercase text-slate-500 hover:text-white transition-colors">New In</a>
+                <a href="#about" class="text-[10px] font-medium tracking-[.18em] uppercase text-slate-500 hover:text-white transition-colors">About</a>
+            </div>
+            <div class="flex items-center gap-0.5 sm:gap-2">
+                <button onclick="ts()" class="p-1.5 text-slate-500 hover:text-white transition-colors"><i data-lucide="search" class="w-[15px] h-[15px]"></i></button>
+                <button onclick="tc()" class="p-1.5 text-slate-500 hover:text-white transition-colors relative">
+                    <i data-lucide="shopping-bag" class="w-[15px] h-[15px]"></i>
+                    <span id="cc" class="absolute -top-0.5 -right-0.5 min-w-[13px] h-[13px] bg-champagne text-[6px] font-bold text-black rounded-full flex items-center justify-center px-0.5 hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="sb" class="hidden border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-10 py-2 relative">
+            <div class="relative">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-600"></i>
+                <input id="si" type="text" placeholder="Search..." oninput="hs(this.value)" class="w-full bg-white/5 border border-white/10 rounded-full py-2 pl-9 pr-9 text-[11px] text-white placeholder-slate-600 focus:outline-none focus:border-champagne/30 transition-colors">
+                <button onclick="ts()" class="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-slate-600"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+            </div>
+            <div id="sr" class="absolute top-full left-0 right-0 mt-1.5 max-h-[50vh] overflow-y-auto rounded-xl bg-[#131313] border border-white/10 shadow-2xl hidden z-[80]"></div>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mo" class="fixed inset-0 bg-black/70 z-[55] hidden" onclick="mob()"></div>
+<div id="mm" class="fixed top-0 left-0 h-full w-[230px] bg-[#0f0f0f] border-r border-white/5 z-[56] hidden flex-col">
+    <div class="flex items-center justify-between px-3 py-2.5 border-b border-white/5">
+        <span class="font-classic text-sm tracking-[.08em] text-champagne">AYSHA</span>
+        <button onclick="mob()" class="p-1 text-slate-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div class="flex-1 py-1.5">
+        <a href="#feat" onclick="mob()" class="block px-3.5 py-2 text-[10px] font-medium tracking-[.18em] uppercase text-slate-400 hover:text-white hover:bg-white/5">Shop</a>
+        <a href="#new" onclick="mob()" class="block px-3.5 py-2 text-[10px] font-medium tracking-[.18em] uppercase text-slate-400 hover:text-white hover:bg-white/5">New In</a>
+        <a href="#about" onclick="mob()" class="block px-3.5 py-2 text-[10px] font-medium tracking-[.18em] uppercase text-slate-400 hover:text-white hover:bg-white/5">About</a>
+    </div>
+</div>
+
+<!-- Cart -->
+<div id="co" class="fixed inset-0 bg-black/60 z-[60] hidden" onclick="tc()"></div>
+<div id="cs" class="fixed top-0 right-0 h-full w-full sm:max-w-[340px] bg-[#0f0f0f] border-l border-white/5 z-[70] hidden flex-col">
+    <div class="flex items-center justify-between px-3.5 py-2.5 border-b border-white/5">
+        <div><h3 class="font-classic text-sm tracking-wide">Bag</h3><p id="cic" class="text-[7px] text-slate-600 tracking-wider uppercase">0 items</p></div>
+        <button onclick="tc()" class="p-1 text-slate-500"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div id="ci" class="flex-1 overflow-y-auto px-3 py-3">
+        <div id="ce" class="flex flex-col items-center justify-center h-full"><div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-2"><i data-lucide="shopping-bag" class="w-4 h-4 text-slate-700"></i></div><p class="text-slate-600 text-[9px]">Empty</p></div>
+        <div id="cl" class="hidden flex flex-col gap-2"></div>
+    </div>
+    <div id="cf" class="hidden border-t border-white/5 px-3.5 py-3">
+        <div class="flex justify-between mb-0.5"><span class="text-[9px] text-slate-600">Subtotal</span><span id="cst" class="text-[9px] font-medium">₹0</span></div>
+        <div class="flex justify-between mb-2.5 pt-2 border-t border-white/5"><span class="font-classic text-sm">Total</span><span id="ctt" class="font-classic text-sm text-champagne">₹0</span></div>
+        <button class="w-full bg-champagne hover:bg-champagne/90 text-black font-semibold text-[9px] py-2.5 rounded-full transition-all">Checkout</button>
+    </div>
+</div>
+
+<!-- Hero -->
+<section class="relative h-[52vh] sm:h-[85vh] lg:min-h-screen flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="https://picsum.photos/seed/aysha-hero-classic/1400/1000.jpg" class="w-full h-full object-cover opacity-45 scale-105">
+        <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-[#0a0a0a]"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 via-transparent to-[#0a0a0a]/60"></div>
+    </div>
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] sm:w-[500px] sm:h-[500px] bg-champagne/8 rounded-full blur-[100px] sm:blur-[140px] anim-float pointer-events-none"></div>
+    <div class="relative z-10 text-center px-4 max-w-3xl mx-auto">
+        <div class="anim-up divider-gold text-champagne/60 mb-3 sm:mb-6"><span class="font-classic text-[8px] sm:text-base tracking-[.3em] uppercase whitespace-nowrap">Autumn / Winter 2026</span></div>
+        <h1 class="anim-d1 font-serif text-[26px] sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-tight leading-[1.08] mb-2 sm:mb-6">Timeless<br><span class="italic text-champagne/90">Elegance</span> Redefined</h1>
+        <p class="anim-d2 text-slate-500 text-[9px] sm:text-base font-light leading-relaxed max-w-sm mx-auto mb-3 sm:mb-8 hidden sm:block">Curated luxury essentials — where heritage craftsmanship meets contemporary sophistication.</p>
+        <div class="anim-d3 flex items-center justify-center gap-2 sm:gap-4">
+            <a href="#feat" class="bg-champagne hover:bg-champagne/90 text-black font-semibold text-[8px] sm:text-sm px-5 sm:px-7 py-2 sm:py-3 rounded-full transition-all">Explore</a>
+            <a href="#feat" class="border border-white/15 text-white font-medium text-[8px] sm:text-sm px-5 sm:px-7 py-2 sm:py-3 rounded-full transition-all backdrop-blur-sm">Shop Now</a>
+        </div>
+        <div class="hero-line mx-auto mt-3 sm:mt-6"></div>
+    </div>
+    <div class="absolute bottom-2.5 sm:bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-px animate-bounce"><span class="text-[6px] tracking-[.2em] uppercase text-slate-700 hidden sm:block">Scroll</span><i data-lucide="chevron-down" class="w-2.5 h-2.5 text-slate-700"></i></div>
+</section>
+
+<!-- Marquee -->
+<section class="border-y border-white/5 py-2.5 overflow-hidden">
+    <div class="flex items-center gap-8 anim-marquee whitespace-nowrap">
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Versace</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Gucci</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Prada</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Balenciaga</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Saint Laurent</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Valentino</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Versace</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Gucci</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Prada</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Balenciaga</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Saint Laurent</span><span class="text-champagne/15 text-[7px]">✦</span>
+        <span class="font-classic text-slate-700 text-[9px] sm:text-sm tracking-[.25em] uppercase">Valentino</span><span class="text-champagne/15 text-[7px]">✦</span>
+    </div>
+</section>
+
+<!-- Featured -->
+<section id="feat" class="py-5 sm:py-14 px-3 sm:px-6 lg:px-10">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-2.5 sm:mb-5 gap-2">
+            <div><p class="font-classic text-[7px] sm:text-xs tracking-[.25em] uppercase text-champagne mb-0.5">Handpicked</p><h2 class="font-serif text-[16px] sm:text-4xl md:text-5xl font-medium tracking-tight">Featured</h2></div>
+            <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0 overflow-x-auto">
+                <button onclick="fp('all')" data-f="all" class="fb active text-[7px] sm:text-[10px] font-medium tracking-[.1em] uppercase text-white border-b border-champagne pb-px whitespace-nowrap">All</button>
+                <button onclick="fp('clothing')" data-f="clothing" class="fb text-[7px] sm:text-[10px] font-medium tracking-[.1em] uppercase text-slate-700 border-b border-transparent pb-px whitespace-nowrap">Clothing</button>
+                <button onclick="fp('accessories')" data-f="accessories" class="fb text-[7px] sm:text-[10px] font-medium tracking-[.1em] uppercase text-slate-700 border-b border-transparent pb-px whitespace-nowrap">Accessories</button>
+                <button onclick="fp('shoes')" data-f="shoes" class="fb text-[7px] sm:text-[10px] font-medium tracking-[.1em] uppercase text-slate-700 border-b border-transparent pb-px whitespace-nowrap">Shoes</button>
+                <button id="va-feat" onclick="toggleView('feat')" class="view-btn text-[7px] sm:text-[9px] tracking-wider uppercase flex-shrink-0">View All →</button>
+            </div>
+        </div>
+        <div id="pg"></div>
+    </div>
+</section>
+
+<!-- Promo -->
+<section class="py-3 sm:py-10 px-3 sm:px-6 lg:px-10">
+    <div class="max-w-7xl mx-auto">
+        <div class="relative rounded-lg sm:rounded-3xl overflow-hidden">
+            <img src="https://picsum.photos/seed/aysha-promo-classic/1200/300.jpg" class="w-full h-[130px] sm:h-[320px] md:h-[420px] object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
+            <div class="absolute inset-0 flex items-center px-4 sm:px-10 md:px-14">
+                <div class="max-w-sm">
+                    <p class="font-classic text-[6px] sm:text-xs tracking-[.25em] uppercase text-champagne mb-1 sm:mb-3">Limited Time</p>
+                    <h2 class="font-serif text-[15px] sm:text-3xl md:text-5xl font-medium tracking-tight leading-tight mb-1.5 sm:mb-4">Up to 40% Off<br><span class="italic text-champagne/90">Autumn Essentials</span></h2>
+                    <a href="#" class="inline-flex items-center gap-1 bg-champagne hover:bg-champagne/90 text-black font-semibold text-[8px] sm:text-sm px-4 sm:px-7 py-1.5 sm:py-3 rounded-full transition-all w-full sm:w-auto justify-center">Shop Sale<i data-lucide="arrow-right" class="w-3 h-3"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- New Arrivals -->
+<section id="new" class="py-5 sm:py-14 px-3 sm:px-6 lg:px-10">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-2.5 sm:mb-5">
+            <div><p class="font-classic text-[7px] sm:text-xs tracking-[.25em] uppercase text-champagne mb-0.5">Just Landed</p><h2 class="font-serif text-[16px] sm:text-4xl md:text-5xl font-medium tracking-tight">New Arrivals</h2></div>
+            <button id="va-new" onclick="toggleView('new')" class="view-btn text-[6px] sm:text-[9px] tracking-wider uppercase flex-shrink-0">View All →</button>
+        </div>
+        <div id="ng"></div>
+    </div>
+</section>
+
+<!-- Best Sellers -->
+<section id="best" class="py-5 sm:py-14 px-3 sm:px-6 lg:px-10">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between mb-2.5 sm:mb-5">
+            <div><p class="font-classic text-[7px] sm:text-xs tracking-[.25em] uppercase text-champagne mb-0.5">Most Loved</p><h2 class="font-serif text-[16px] sm:text-4xl md:text-5xl font-medium tracking-tight">Best Sellers</h2></div>
+            <button id="va-best" onclick="toggleView('best')" class="view-btn text-[6px] sm:text-[9px] tracking-wider uppercase flex-shrink-0">View All →</button>
+        </div>
+        <div id="bg"></div>
+    </div>
+</section>
+
+<!-- USP -->
+<section id="about" class="py-5 sm:py-14 px-3 sm:px-6 lg:px-10 border-y border-white/5">
+    <div class="max-w-7xl mx-auto grid grid-cols-4 gap-1.5 sm:gap-8">
+        <div class="text-center"><div class="w-7 h-7 sm:w-12 sm:h-12 mx-auto mb-1.5 rounded-lg sm:rounded-xl bg-champagne/5 border border-champagne/10 flex items-center justify-center"><i data-lucide="truck" class="w-3 h-3 sm:w-5 sm:h-5 text-champagne/70"></i></div><h3 class="font-classic text-[8px] sm:text-base mb-0.5 hidden sm:block">Free Shipping</h3><p class="text-slate-700 text-[6px] sm:text-xs font-light hidden sm:block">Orders ₹499+</p></div>
+        <div class="text-center"><div class="w-7 h-7 sm:w-12 sm:h-12 mx-auto mb-1.5 rounded-lg sm:rounded-xl bg-champagne/5 border border-champagne/10 flex items-center justify-center"><i data-lucide="shield-check" class="w-3 h-3 sm:w-5 sm:h-5 text-champagne/70"></i></div><h3 class="font-classic text-[8px] sm:text-base mb-0.5 hidden sm:block">Authenticity</h3><p class="text-slate-700 text-[6px] sm:text-xs font-light hidden sm:block">Certified genuine</p></div>
+        <div class="text-center"><div class="w-7 h-7 sm:w-12 sm:h-12 mx-auto mb-1.5 rounded-lg sm:rounded-xl bg-champagne/5 border border-champagne/10 flex items-center justify-center"><i data-lucide="rotate-ccw" class="w-3 h-3 sm:w-5 sm:h-5 text-champagne/70"></i></div><h3 class="font-classic text-[8px] sm:text-base mb-0.5 hidden sm:block">Easy Returns</h3><p class="text-slate-700 text-[6px] sm:text-xs font-light hidden sm:block">30-day policy</p></div>
+        <div class="text-center"><div class="w-7 h-7 sm:w-12 sm:h-12 mx-auto mb-1.5 rounded-lg sm:rounded-xl bg-champagne/5 border border-champagne/10 flex items-center justify-center"><i data-lucide="headphones" class="w-3 h-3 sm:w-5 sm:h-5 text-champagne/70"></i></div><h3 class="font-classic text-[8px] sm:text-base mb-0.5 hidden sm:block">Concierge</h3><p class="text-slate-700 text-[6px] sm:text-xs font-light hidden sm:block">Expert styling</p></div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-5 sm:py-14 px-3 sm:px-6 lg:px-10">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-3 sm:mb-8"><p class="font-classic text-[7px] sm:text-xs tracking-[.25em] uppercase text-champagne mb-0.5">Testimonials</p><h2 class="font-serif text-[16px] sm:text-4xl font-medium tracking-tight">What Clients Say</h2></div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+            <div class="bg-[#111] border border-white/5 rounded-lg p-3.5 sm:p-7 hover:border-champagne/10 transition-colors"><div class="flex gap-px mb-2.5"><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i></div><p class="text-slate-400 text-[8px] sm:text-sm font-light leading-relaxed mb-3">"The quality is exceptional. Every piece from Aysha Collections feels made specifically for me."</p><div class="flex items-center gap-2"><img src="https://picsum.photos/seed/aysha-av1/80/80.jpg" class="w-6 h-6 rounded-full object-cover"><div><p class="text-[8px] sm:text-sm font-medium">Sophia Laurent</p><p class="text-[6px] sm:text-xs text-slate-700">Fashion Director</p></div></div></div>
+            <div class="bg-[#111] border border-white/5 rounded-lg p-3.5 sm:p-7 hover:border-champagne/10 transition-colors"><div class="flex gap-px mb-2.5"><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i></div><p class="text-slate-400 text-[8px] sm:text-sm font-light leading-relaxed mb-3">"From browsing to delivery, flawless. The packaging feels like unwrapping a gift."</p><div class="flex items-center gap-2"><img src="https://picsum.photos/seed/aysha-av2/80/80.jpg" class="w-6 h-6 rounded-full object-cover"><div><p class="text-[8px] sm:text-sm font-medium">James Whitmore</p><p class="text-[6px] sm:text-xs text-slate-700">Creative Consultant</p></div></div></div>
+            <div class="bg-[#111] border border-white/5 rounded-lg p-3.5 sm:p-7 hover:border-champagne/10 transition-colors"><div class="flex gap-px mb-2.5"><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i><i data-lucide="star" class="w-2.5 h-2.5 text-champagne fill-champagne"></i></div><p class="text-slate-400 text-[8px] sm:text-sm font-light leading-relaxed mb-3">"Loyal customer for two years. The curation is always on point."</p><div class="flex items-center gap-2"><img src="https://picsum.photos/seed/aysha-av3/80/80.jpg" class="w-6 h-6 rounded-full object-cover"><div><p class="text-[8px] sm:text-sm font-medium">Elena Voss</p><p class="text-[6px] sm:text-xs text-slate-700">Architect</p></div></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="py-5 sm:py-14 px-3 sm:px-6 lg:px-10">
+    <div class="max-w-lg mx-auto text-center">
+        <p class="font-classic text-[7px] sm:text-xs tracking-[.25em] uppercase text-champagne mb-1">Stay Connected</p>
+        <h2 class="font-serif text-[16px] sm:text-3xl font-medium tracking-tight mb-1">Join Aysha Collections</h2>
+        <p class="text-slate-700 text-[8px] sm:text-sm font-light mb-4">New arrivals, exclusive offers.</p>
+        <form onsubmit="sub(event)" class="flex gap-1.5 max-w-[260px] mx-auto px-3">
+            <input id="ei" type="email" placeholder="Email" required class="flex-1 bg-white/5 border border-white/10 rounded-full px-3 py-1.5 text-[9px] text-white placeholder-slate-600 focus:outline-none focus:border-champagne/30 transition-colors">
+            <button type="submit" class="bg-champagne hover:bg-champagne/90 text-black font-semibold text-[8px] px-4 py-1.5 rounded-full transition-all active:scale-95">Go</button>
+        </form>
+    </div>
+</section>
+
+<!-- Instagram -->
+<section class="py-4 sm:py-10 px-3 sm:px-6 lg:px-10 border-t border-white/5">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-2.5 sm:mb-5"><p class="font-classic text-[7px] sm:text-xs tracking-[.25em] uppercase text-champagne">@ayshacollections</p></div>
+        <div class="scroll-x flex gap-1 -mx-3 px-3 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-6 sm:overflow-visible">
+            <a href="#" class="flex-shrink-0 w-[64px] sm:w-auto group relative aspect-square overflow-hidden rounded-md"><img src="https://picsum.photos/seed/aysha-ig1/200/200.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+            <a href="#" class="flex-shrink-0 w-[64px] sm:w-auto group relative aspect-square overflow-hidden rounded-md"><img src="https://picsum.photos/seed/aysha-ig2/200/200.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+            <a href="#" class="flex-shrink-0 w-[64px] sm:w-auto group relative aspect-square overflow-hidden rounded-md"><img src="https://picsum.photos/seed/aysha-ig3/200/200.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+            <a href="#" class="flex-shrink-0 w-[64px] sm:w-auto group relative aspect-square overflow-hidden rounded-md"><img src="https://picsum.photos/seed/aysha-ig4/200/200.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+            <a href="#" class="flex-shrink-0 w-[64px] sm:w-auto group relative aspect-square overflow-hidden rounded-md hidden sm:block"><img src="https://picsum.photos/seed/aysha-ig5/200/200.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+            <a href="#" class="flex-shrink-0 w-[64px] sm:w-auto group relative aspect-square overflow-hidden rounded-md hidden sm:block"><img src="https://picsum.photos/seed/aysha-ig6/200/200.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"><div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center"><i data-lucide="instagram" class="w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div></a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-white/5 bg-[#0a0a0a]">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-10 py-5 sm:py-10">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+            <div class="col-span-2 lg:col-span-1">
+                <a href="#" class="font-classic text-[13px] sm:text-2xl tracking-[.1em] text-white">AYSHA<span class="text-champagne">COLLECTIONS</span></a>
+                <p class="text-slate-700 text-[7px] sm:text-sm font-light leading-relaxed mt-1 mb-2.5 max-w-[200px]">Curated luxury essentials.</p>
+                <div class="flex gap-1.5"><a href="#" class="w-6 h-6 rounded-full bg-white/5 border border-white/5 flex items-center justify-center"><i data-lucide="instagram" class="w-2.5 h-2.5 text-slate-600"></i></a><a href="#" class="w-6 h-6 rounded-full bg-white/5 border border-white/5 flex items-center justify-center"><i data-lucide="twitter" class="w-2.5 h-2.5 text-slate-600"></i></a><a href="#" class="w-6 h-6 rounded-full bg-white/5 border border-white/5 flex items-center justify-center"><i data-lucide="facebook" class="w-2.5 h-2.5 text-slate-600"></i></a></div>
+            </div>
+            <div><h4 class="font-classic text-[7px] font-medium tracking-[.15em] uppercase mb-2 text-slate-500">Shop</h4><ul class="flex flex-col gap-1"><li><a href="#" class="text-[7px] sm:text-sm text-slate-700 hover:text-slate-400">New Arrivals</a></li><li><a href="#" class="text-[7px] sm:text-sm text-slate-700 hover:text-slate-400">Best Sellers</a></li><li><a href="#" class="text-[7px] sm:text-sm text-slate-700 hover:text-slate-400">Sale</a></li></ul></div>
+            <div><h4 class="font-classic text-[7px] font-medium tracking-[.15em] uppercase mb-2 text-slate-500">Company</h4><ul class="flex flex-col gap-1"><li><a href="#" class="text-[7px] sm:text-sm text-slate-700 hover:text-slate-400">About</a></li><li><a href="#" class="text-[7px] sm:text-sm text-slate-700 hover:text-slate-400">Careers</a></li><li><a href="#" class="text-[7px] sm:text-sm text-slate-700 hover:text-slate-400">Contact</a></li></ul></div>
+            <div><h4 class="font-classic text-[7px] font-medium tracking-[.15em] uppercase mb-2 text-slate-500">Help</h4><ul class="flex flex-col gap-1"><li><a href="#" class="text-[7px] sm:text-sm text-slate-700 hover:text-slate-400">FAQ</a></li><li><a href="#" class="text-[7px] sm:text-sm text-slate-700 hover:text-slate-400">Shipping</a></li><li><a href="#" class="text-[7px] sm:text-sm text-slate-700 hover:text-slate-400">Returns</a></li></ul></div>
+        </div>
+        <div class="border-t border-white/5 mt-5 pt-3 flex items-center justify-between">
+            <p class="text-[6px] sm:text-xs text-slate-800">© 2026 Aysha Collections</p>
+            <div class="flex gap-1"><div class="bg-white/5 rounded px-1 py-px text-[6px] text-slate-700">VISA</div><div class="bg-white/5 rounded px-1 py-px text-[6px] text-slate-700">MC</div><div class="bg-white/5 rounded px-1 py-px text-[6px] text-slate-700">UPI</div></div>
+        </div>
+    </div>
+</footer>
+
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-2.5 right-2.5 sm:bottom-6 sm:right-6 w-7 h-7 bg-champagne/10 hover:bg-champagne/20 backdrop-blur-md rounded-full flex items-center justify-center text-champagne transition-all opacity-0 pointer-events-none z-50 border border-champagne/10 active:scale-90"><i data-lucide="chevron-up" class="w-3 h-3"></i></button>
+
+<script>
+/* ── Product Data ── */
+const P=[
+    {n:"Modestouze Attires Dress for Woman | Western Dress for Women | Stylish Maxi Wear | Long One Piece | Floral Printed Frock for Womens Gown | Maxi Outfit | 3/4 Sleeves Wear for Party, Vacation & Beach",p:695,c:"clothing",b:"New",i:"https://z-cdn-media.chatglm.cn/files/bbc2248d-6354-451e-8a1e-ee24ac3caa5a.jpg?auth_key=1874950511-e41246586333429896c7350da9944547-0-67dfd89441a35522a2262d89c1317ffb",custom:true,
+     link:"https://amzn.to/4cklh2E",label:"Amazon",store:"amazon"},
+    {n:"Minimalist 2% Salicylic Acid Serum for Acne & Blackheads | BHA Exfoliating Anti Acne Serum for Pore Cleansing & Oil Control | Pore Tightening Treatment for Oily & Acne-Prone Skin | 10ml",p:236,c:"accessories",b:"",i:"https://z-cdn-media.chatglm.cn/files/bd9b7edf-4dcc-40df-abc1-16fb9997156a.jpg?auth_key=1874950511-7133af0cda4d4748b42496b37f1feb29-0-a2f787bc0f8912297efabaa25459a6ed",custom:true,
+     link:"https://amzn.to/413c20F",label:"Amazon",store:"amazon"},
+    {n:"Shining Diva Fashion Gold Plated Latest Stylish Kada Bangle Cuff Bracelet for Women & Girls",p:259,c:"accessories",b:"Best Seller",i:"https://z-cdn-media.chatglm.cn/files/f73ac1f4-a3ad-4f29-8cfa-48c2313d329c.jpg?auth_key=1874950511-fab0c9ff419444eebedfbc9dabeebbd6-0-72812bdebfa772addc7bdb28081909b5",custom:true,
+     link:"https://amzn.to/3OcddIc",label:"Amazon",store:"amazon"},
+    {n:"Lakme Powerplay Mousse Foundation, Matte Finish, Full coverage, Lightweight, Long Lasting Face Makeup,Rose Ivory, 25g",p:382,c:"accessories",b:"",i:"https://z-cdn-media.chatglm.cn/files/8d410f51-896b-4f6a-8d3d-135f206abd9a.jpg?auth_key=1875053048-da89cf6d90ea41ddba497d296f753656-0-8522631dd65edb3fdaf2b6a4cdfde4e7",custom:true,
+     link:"https://amzn.to/3OhAqst",label:"Amazon",store:"amazon"},
+    {n:"Shining Diva Fashion 11 Pairs Combo Set Latest Stylish Vintage Pearl Earrings for Women Gold Plated Dangle Earrings Heart Butterfly Hoop Earrings Geometric Fashion Jewelry",p:375,c:"accessories",b:"New",i:"https://z-cdn-media.chatglm.cn/files/ca5214cb-b21e-4f63-962d-a98a652e8bc9.jpg?auth_key=1875053048-1aca7cd2c537476fa0f31e4179ab721b-0-a542b35a09292b2f70f0ef47dcc773e9",custom:true,
+     link:"https://amzn.to/3QdC3YF",label:"Amazon",store:"amazon"},
+    {n:"Dot & Key Watermelon Cooling Gel Face Wash With Vitamin C & Cucumber | Face Wash For Glowing Skin|Oil Free |Removes Excess Oil & Dirt | For Combination & Oily Skin| For Women & Men|100Ml",p:214,c:"accessories",b:"",i:"https://z-cdn-media.chatglm.cn/files/966419a3-7a3b-4601-be3d-75e55c1284f3.jpg?auth_key=1875053048-b2d017bf273c49448709c5c346a4dd89-0-4107b08ef603b802d68d76d0994b7140",custom:true,
+     link:"https://amzn.to/3NB6ZBy",label:"Amazon",store:"amazon"},
+    {n:"Colors Queen 4 in 1 Multifunctional Makeup Brush Set with Foundation Brush, Powder Brush, Eyeshadow Blending Brush & Flat Brush | Feathery Soft Bristles Makeup Brushes for Women",p:372,c:"accessories",b:"",i:"https://z-cdn-media.chatglm.cn/files/827cb1b4-c323-46f5-b887-ca6e1cccd4f8.jpg?auth_key=1875053048-4c4ba2c54b114fe098d3d02b0455ed0b-0-4d2a7d29ae729e034ff520cb888783ba",custom:true,
+     link:"https://amzn.to/47CpDj5",label:"Amazon",store:"amazon"},
+    {n:"Suede Chelsea Boots",p:680,c:"shoes",b:"",i:"aysha-p-boots"},
+    {n:"Cashmere Turtleneck",p:520,c:"clothing",b:"",i:"aysha-p-turtle"},
+    {n:"Titanium Sunglasses",p:390,c:"accessories",b:"New",i:"aysha-p-sungl"},
+    {n:"Leather Sneakers",p:445,c:"shoes",b:"",i:"aysha-p-sneak"},
+    {n:"Structured Blazer",p:890,c:"clothing",b:"",i:"aysha-p-blazer"},
+];
+
+const NA=[
+    {n:"CANVI Stylish | Fancy | Comfortable Women's Ethnic Flats Sandals for Women and Girl, Synthetic Leather Sandals Casual Summer Beach Shoes Sandal",p:499,b:"New",i:"https://z-cdn-media.chatglm.cn/files/f176a597-0f36-44c9-8705-e35701d58f4f.jpg?auth_key=1875058932-754f2785c625404ca0b385344b827fa7-0-574bae2485b67a5853a5dcf5980f2df3",custom:true,
+     link:"https://amzn.to/4v4qGSR",label:"Amazon",store:"amazon"},
+    {n:"GoSriKi Women's Rayon Blend Anarkali Printed Kurta with Pant & Dupatta | Ethnic Kurta Pant Dupatta Set for Women | Traditional Indian Wear Outfit",p:799,b:"New",i:"https://z-cdn-media.chatglm.cn/files/a6748396-ccd2-4ff4-9ca0-880cdb73eaa9.jpg?auth_key=1875058932-77be51b30fae43d4bb26d696c5997591-0-23e8d0afba73f300e9d31edc046d937e",custom:true,
+     link:"https://amzn.to/4dmzsWb",label:"Amazon",store:"amazon"},
+    {n:"ANNI Designer Women's Rayon Blend Solid Straight Kurta with Pant & Dupatta",p:643,b:"New",i:"https://z-cdn-media.chatglm.cn/files/843fbc65-4dd8-49f9-b331-7ca67579ecdf.jpg?auth_key=1875058932-bf5c327273b54714928f0fcb08062be1-0-648e67d39ee947c86eb7146548e0b265",custom:true,
+     link:"https://amzn.to/4s7oozO",label:"Amazon",store:"amazon"},
+    {n:"ANNI DESIGNER Women's Rayon Viscose Straight Printed Kurta with Pant",p:499,b:"New",i:"https://z-cdn-media.chatglm.cn/files/3412d55a-0b6b-4022-ae63-561027e1455a.jpg?auth_key=1875058932-87a9b300db134c769a826b338b8274ec-0-9af2c1fac99d86b115ddceac2fcf854e",custom:true,
+     link:"https://amzn.to/4bLZDEw",label:"Amazon",store:"amazon"},
+    {n:"Women's Black Boat Neck Full Sleeve Cotton Crop Top's|Choli Blouses for Women's|Readymade Blous and Croptop for Saree",p:361,b:"New",i:"https://z-cdn-media.chatglm.cn/files/5aff9506-d2af-442c-9e20-d95e8f1fd0e7.jpg?auth_key=1875058932-f003acbf90bf4df5ae5f24b35b7a529f-0-69dd4da5e151c4e2c3540b9541b85b72",custom:true,
+     link:"https://amzn.to/3NSPgFO",label:"Amazon",store:"amazon"},
+    {n:"Istyle Can Women's Navy Blue Ruched Asymmetrical Stretch T-Shirt – Chic & Comfortable Top",p:361,b:"New",i:"https://z-cdn-media.chatglm.cn/files/abda8be3-27fe-4a8c-a97d-f529853dd5f2.jpg?auth_key=1875058932-dc2d280f14264ec490154596ad8ab79b-0-9a5fdafc9842483965b5a0a2e2b1e6f2",custom:true,
+     link:"https://amzn.to/418IzSU",label:"Amazon",store:"amazon"},
+    {n:"Heritage Leather Jacket",p:1890,i:"aysha-new-hero",b:"New"},
+    {n:"Silk Blend Scarf",p:320,i:"aysha-silk-scf",b:"New"},
+    {n:"Cashmere Crew Knit",p:580,i:"aysha-cash-knit",b:"New"},
+    {n:"Minimalist Tote",p:460,i:"aysha-tote-bag",b:"New"},
+    {n:"Satin Evening Dress",p:1240,i:"aysha-satin-dr",b:"New"},
+    {n:"Diamond Cuff",p:890,i:"aysha-cuff-br",b:"New"},
+];
+
+const BS=[
+    {n:"Clayco. Rice & Sake Sleep Mask 50 Ml | Face Mask For Glowing Skin | Night Cream For Glass skin | Japanese Skincare Routine | Sulphate Free & Vegan",p:1044,b:"Best Seller",i:"https://z-cdn-media.chatglm.cn/files/12ad5b78-6ad5-4a3b-b7e8-ca10f64d9c11.jpg?auth_key=1875063522-fdf4ec3183384e21a1427080e0f23981-0-68409661ad9b5c845fa623c23f24eff5",custom:true,
+     link:"https://amzn.to/4sPhzUK",label:"Amazon",store:"amazon"},
+    {n:"MARS Matte Lip Liner | One Swipe Smooth Application | Long Lasting Lip Pencil (1.4gm) (08-NUDE SPELL)",p:63,b:"Best Seller",i:"https://z-cdn-media.chatglm.cn/files/85bc8aac-7217-4c77-8539-62a6dcc96757.jpg?auth_key=1875061039-1fa0bc3898f7452289ee88c8865e618c-0-e8170056ae376f4b03b3874006a70f77",custom:true,
+     link:"https://amzn.to/4tmugGs",label:"Amazon",store:"amazon"},
+    {n:"Maybelline New York Fit Me Compact Powder, Matte + Poreless Compact Powder, upto 16 hours of Oil Control with SPF 32 PA+++ and UV filters & ideal for normal to oily skin - 128 Warm Nude|6g",p:143,b:"Best Seller",i:"https://z-cdn-media.chatglm.cn/files/485377f5-6e16-4d81-821f-f947e66f5a00.jpg?auth_key=1875061039-9268993e971c431d9bc0bba6d53bc86f-0-dfcca7f459960dfd98684c75a5736fe8",custom:true,
+     link:"https://amzn.to/4s1o5X7",label:"Amazon",store:"amazon"},
+    {n:"Cetaphil Gentle Skin Hydrating Face Wash 118ml, Paraben Free, Sulphate-Free Gentle Skin Hydrating Cleanser with Niacinamide, Vitamin B5 for Dry to Normal, Sensitive Skin",p:390,b:"Best Seller",i:"https://z-cdn-media.chatglm.cn/files/ab960402-e853-4c72-a052-e001bfe7b30e.jpg?auth_key=1875061039-f624eaa715894ebdb01a0e70dcd374db-0-1e4c2af4b805e97d6b4daefdda91ffa1",custom:true,
+     link:"https://amzn.to/4sJUR02",label:"Amazon",store:"amazon"},
+    {n:"Plum 3% Niacinamide & Rice Water Face Toner | Alcohol-Free Toner for Oily Acne Prone Dry Combination Skin | Pore Tightening & Glowing Skin |Fades Blemishes, Brightens & Smoothens | Women & Men | 150ml",p:396,b:"Best Seller",i:"https://z-cdn-media.chatglm.cn/files/f0ba7901-7e15-4d9f-bbf7-f30054418609.jpg?auth_key=1875061039-b6e31617707244cc8dc2df3d4019d564-0-55c051bb72b085fa19c29c07097fa95d",custom:true,
+     link:"https://amzn.to/4c0Gf5t",label:"Amazon",store:"amazon"},
+    {n:"The Face Shop Rice Water Bright Foaming Face Wash 50ml, Face Wash for Glowing Skin, Cleanser for Uneven Skin Tone, Korean Skin Care Products, Face Wash For Oily skin",p:349,b:"Best Seller",i:"https://z-cdn-media.chatglm.cn/files/572fe2bf-23c9-413e-929e-201d38df3f68.jpg?auth_key=1875061039-a33093ee5fda4f27a4f249e5a489cabb-0-fc6291f0d5d580606a9fdce132f0c404",custom:true,
+     link:"https://amzn.to/3PBxOpR",label:"Amazon",store:"amazon"},
+];
+
+let cart=[];
+const expanded={feat:false,new:false,best:false};
+const FEAT_PREVIEW=7;
+const OTHER_PREVIEW=6;
+
+/* Format price with Indian Rupee symbol and Indian number system */
+function fmtPrice(val){
+    return '₹' + val.toLocaleString('en-IN');
+}
+
+function imgSrc(p,size){
+    if(p.custom) return p.i;
+    return `https://picsum.photos/seed/${p.i}/${size}x${Math.round(size*4/3)}.jpg`;
+}
+function imgSrcCart(p){
+    if(p.custom) return p.i;
+    return `https://picsum.photos/seed/${p.i}/60/60.jpg`;
+}
+
+function getLink(p){
+    if(p.link) return p.link;
+    return `https://www.amazon.in/s?k=${encodeURIComponent(p.n)}`;
+}
+function getLabel(p){
+    if(p.label) return p.label;
+    return "Amazon";
+}
+function getStoreClass(p){
+    if(p.store) return p.store;
+    return "amazon";
+}
+
+function mc(p,idx){
+    const src=imgSrc(p,240);
+    const url=getLink(p);
+    const lbl=getLabel(p);
+    const sc=getStoreClass(p);
+    return`<div class="mc" style="animation:fadeUp .3s ease-out ${idx*.03}s forwards;opacity:0">
+        <div class="relative aspect-[3/4] overflow-hidden">
+            <img src="${src}" alt="${p.n}" class="mc-img" loading="lazy">
+            <div class="mc-act"><button onclick="event.stopPropagation();ac('${p.n.replace(/'/g,"\\'")}',${p.p},'${p.custom?p.i:p.i}',${!!p.custom})" class="bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white text-[7px] font-medium px-3 py-2 rounded-full transition-all active:scale-90 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Add</button></div>
+            ${p.b?`<span class="absolute top-1.5 left-1.5 bg-champagne/10 text-champagne text-[5px] sm:text-[6px] font-semibold tracking-[.08em] uppercase px-1.5 py-px rounded-full border border-champagne/15">${p.b}</span>`:''}
+        </div>
+        <div class="px-2 py-2 sm:px-2.5 sm:py-2.5">
+            <h3 class="font-medium text-[8px] sm:text-[10px] leading-tight clamp1 mb-0.5">${p.n}</h3>
+            <a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="az-link ${sc}"><span>${lbl}</span><svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+            <p class="text-[8px] sm:text-[10px] text-champagne font-medium mt-0.5">${fmtPrice(p.p)}</p>
+        </div>
+    </div>`
+}
+
+function rr(el,arr,isExp,previewCount){
+    const g=document.getElementById(el);
+    const count = previewCount || OTHER_PREVIEW;
+    const items=isExp?arr:arr.slice(0,count);
+    if(!isExp&&window.innerWidth<640){
+        g.className='scroll-x flex gap-4 pl-5 pr-3 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-6 sm:overflow-visible';
+        g.innerHTML=items.map((p,i)=>`<div class="flex-shrink-0 w-[110px] sm:w-auto">${mc(p,i)}</div>`).join('');
+    } else {
+        g.className='grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-5';
+        g.innerHTML=items.map((p,i)=>mc(p,i)).join('');
+    }
+    lucide.createIcons();
+}
+
+function updateViewBtn(key){
+    const btn=document.getElementById('va-'+key);
+    if(btn){
+        btn.textContent=expanded[key]?'Show Less ←':'View All →';
+        btn.classList.toggle('expanded',expanded[key]);
+    }
+}
+function toggleView(key){
+    expanded[key]=!expanded[key];
+    updateViewBtn(key);
+    if(key==='feat'){const list=currentFilter==='all'?P:P.filter(p=>p.c===currentFilter);rr('pg',list,expanded.feat,FEAT_PREVIEW)}
+    else if(key==='new'){rr('ng',NA,expanded.new,OTHER_PREVIEW)}
+    else if(key==='best'){rr('bg',BS,expanded.best,OTHER_PREVIEW)}
+}
+
+let currentFilter='all';
+function rp(f){
+    currentFilter=f;
+    const list=f==='all'?P:P.filter(p=>p.c===f);
+    expanded.feat=false;
+    updateViewBtn('feat');
+    rr('pg',list,false,FEAT_PREVIEW);
+}
+function fp(f){
+    document.querySelectorAll('.fb').forEach(b=>{const on=b.dataset.f===f;b.classList.toggle('text-white',on);b.classList.toggle('border-champagne',on);b.classList.toggle('text-slate-700',!on);b.classList.toggle('border-transparent',!on)});
+    rp(f);
+}
+
+function hs(q){const r=document.getElementById('sr'),s=q.trim().toLowerCase();if(!s.length){r.classList.add('hidden');return}const allP=[...P,...NA,...BS];const m=allP.filter((p,i,a)=>a.findIndex(x=>x.n===p.n)===i).filter(p=>p.n.toLowerCase().includes(s));if(!m.length){r.innerHTML='<div class="py-8 text-center"><p class="text-[9px] text-slate-600">No results</p></div>';r.classList.remove('hidden');return}r.innerHTML=`<div class="p-2 border-b border-white/5"><p class="text-[7px] text-slate-600 tracking-wider uppercase">${m.length} found</p></div>`+m.map(p=>{const url=getLink(p);const lbl=getLabel(p);const sc=getStoreClass(p);return`<div class="flex items-center gap-2 p-2 hover:bg-white/5 transition-colors border-b border-white/[0.03] last:border-0"><img src="${imgSrcCart(p)}" class="w-8 h-8 rounded-lg object-cover flex-shrink-0"><div class="flex-1 min-w-0"><h4 class="text-[9px] font-medium clamp1">${hl(p.n,s)}</h4><a href="${url}" target="_blank" class="az-link ${sc} mt-px"><span>${lbl}</span></a><p class="text-[8px] text-champagne">${fmtPrice(p.p)}</p></div><button onclick="ac('${p.n.replace(/'/g,"\\'")}',${p.p},'${p.custom?p.i:p.i}',${!!p.custom})" class="w-5 h-5 rounded-full bg-champagne/10 flex items-center justify-center flex-shrink-0 active:scale-90"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>`}).join('');r.classList.remove('hidden')}
+function hl(n,q){const i=n.toLowerCase().indexOf(q);if(i===-1)return n;return`${n.slice(0,i)}<span class="text-champagne">${n.slice(i,i+q.length)}</span>${n.slice(i+q.length)}`}
+function ts(){const b=document.getElementById('sb'),r=document.getElementById('sr'),inp=document.getElementById('si');if(b.classList.contains('hidden')){b.classList.remove('hidden');inp.value='';r.classList.add('hidden');setTimeout(()=>inp.focus(),50)}else{b.classList.add('hidden');r.classList.add('hidden')}}
+document.addEventListener('click',e=>{if(!document.getElementById('sb').contains(e.target))document.getElementById('sr').classList.add('hidden')});
+
+function ac(n,p,img,cust){
+    const e=cart.find(i=>i.n===n);
+    if(e)e.q++;else cart.push({n,p,img,q:1,cust:!!cust});
+    uc();toast(n+' added');
+}
+function rc(i){cart.splice(i,1);uc()}
+function uq(i,d){cart[i].q+=d;if(cart[i].q<=0)cart.splice(i,1);uc()}
+function uc(){
+    const ce=document.getElementById('cc'),ic=document.getElementById('cic'),le=document.getElementById('cl'),ee=document.getElementById('ce'),fe=document.getElementById('cf'),se=document.getElementById('cst'),te=document.getElementById('ctt');
+    const t=cart.reduce((s,i)=>s+i.q,0),st=cart.reduce((s,i)=>s+i.p*i.q,0);
+    if(t>0){ce.classList.remove('hidden');ce.textContent=t;ee.classList.add('hidden');le.classList.remove('hidden');fe.classList.remove('hidden')}else{ce.classList.add('hidden');ee.classList.remove('hidden');le.classList.add('hidden');fe.classList.add('hidden')}
+    ic.textContent=t+(t===1?' item':' items');se.textContent=fmtPrice(st);te.textContent=fmtPrice(st);
+    le.innerHTML=cart.map((it,i)=>`<div class="flex gap-2 p-2 rounded-lg bg-white/[0.03] border border-white/5"><img src="${it.cust?it.img:'https://picsum.photos/seed/'+it.img+'/60/60.jpg'}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0"><div class="flex-1 min-w-0"><h4 class="text-[8px] font-medium clamp1">${it.n}</h4><p class="text-[8px] text-champagne">${fmtPrice(it.p)}</p><div class="flex items-center gap-1 mt-1"><button onclick="uq(${i},-1)" class="w-4 h-4 rounded-full bg-white/10 flex items-center justify-center text-[8px] active:scale-90">−</button><span class="text-[8px] w-3 text-center">${it.q}</span><button onclick="uq(${i},1)" class="w-4 h-4 rounded-full bg-white/10 flex items-center justify-center text-[8px] active:scale-90">+</button></div></div><button onclick="rc(${i})" class="text-slate-700 hover:text-red-400 p-0.5 self-start"><svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>`).join('');
+}
+function tc(){const o=document.getElementById('co'),s=document.getElementById('cs');if(!s.classList.contains('hidden')){s.classList.add('slide-out');setTimeout(()=>{s.classList.add('hidden');s.classList.remove('slide-out','flex');o.classList.add('hidden')},250)}else{o.classList.remove('hidden');s.classList.remove('hidden');s.classList.add('flex','slide-in');setTimeout(()=>s.classList.remove('slide-in'),300)}}
+function mob(){const m=document.getElementById('mm'),o=document.getElementById('mo');if(!m.classList.contains('hidden')){m.classList.add('hidden');m.classList.remove('flex');o.classList.add('hidden')}else{o.classList.remove('hidden');m.classList.remove('hidden');m.classList.add('flex')}}
+function sub(e){e.preventDefault();document.getElementById('ei').value='';toast('Subscribed!')}
+function toast(msg){const b=document.getElementById('tb'),t=document.createElement('div');t.className='toast-in flex items-center gap-2 bg-[#161616] border border-champagne/10 rounded-lg px-2.5 py-1.5 shadow-2xl';t.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0"><polyline points="20 6 9 17 4 12"/></svg><p class="text-[8px] text-slate-400">${msg}</p>`;b.appendChild(t);setTimeout(()=>{t.classList.replace('toast-in','toast-out');setTimeout(()=>t.remove(),200)},2000)}
+
+window.addEventListener('scroll',()=>{
+    const n=document.getElementById('nav'),b=document.getElementById('btt');
+    if(window.scrollY>35){n.style.background='rgba(10,10,10,.92)';n.style.backdropFilter='blur(14px)';n.style.WebkitBackdropFilter='blur(14px)';n.style.borderBottom='1px solid rgba(255,255,255,.03)'}
+    else{n.style.background='transparent';n.style.backdropFilter='none';n.style.WebkitBackdropFilter='none';n.style.borderBottom='none'}
+    b.style.opacity=window.scrollY>300?'1':'0';b.style.pointerEvents=window.scrollY>300?'auto':'none';
+});
+
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{rp(currentFilter);rr('ng',NA,expanded.new,OTHER_PREVIEW);rr('bg',BS,expanded.best,OTHER_PREVIEW)},150)});
+document.addEventListener('DOMContentLoaded',()=>{lucide.createIcons();rp('all');rr('ng',NA,false,OTHER_PREVIEW);rr('bg',BS,false,OTHER_PREVIEW)});
+</script>
+</body>
+</html>
